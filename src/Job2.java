@@ -1,3 +1,4 @@
+import desmoj.core.dist.ContDistErlang;
 import desmoj.core.simulator.Model;
 
 /**
@@ -6,6 +7,7 @@ import desmoj.core.simulator.Model;
 public class Job2 extends Job {
     public Job2(Model owner, String name, boolean showInTrace) {
         super(owner, name, showInTrace);
-        positions = new int[]{Modelo.D, Modelo.A,Modelo.C};
+        positions = new int[]{Modelo.STATION,Modelo.D, Modelo.A,Modelo.C};
+        distErlangs = Modelo.distErlangs2;
     }
 }
