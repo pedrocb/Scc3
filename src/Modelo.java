@@ -1,6 +1,7 @@
 import desmoj.core.dist.ContDistErlang;
 import desmoj.core.dist.ContDistExponential;
 import desmoj.core.simulator.*;
+import desmoj.core.statistic.Tally;
 
 import java.util.concurrent.TimeUnit;
 
@@ -13,6 +14,8 @@ public class Modelo extends Model {
     public static int E = 4;
     public static int STATION = 5;
 
+    public static Tally[] totaldelayinqueue;
+
     public static ContDistErlang[] distErlangs1;
     public static ContDistErlang[] distErlangs2;
     public static ContDistErlang[] distErlangs3;
@@ -22,22 +25,22 @@ public class Modelo extends Model {
 
     protected ProcessQueue<Job> jobqueue;
 
-    protected ProcessQueue<Job> estacao[];
+    protected Station estacao[];
 
 
     protected ProcessQueue<AGV> agvqueue;
 
-    public static int[][] distances =
-            {{0,45,50,90,100,135},
-            {45,0,50,100,90,100,135},
-            {50,50,0,50,50,90},
-            {90,100,50,0,45,50},
-            {100,90,50,45,0,50},
-            {135,135,90,50,50,0}};
+    public static double[][] distances =
+            {{0.0,45.0,50.0,90.0,100.0,135.0},
+            {45.0,0.0,50.0,100.0,90.0,100.0,135.0},
+            {50.0,50.0,0.0,50.0,50.0,90.0},
+            {90.0,100.0,50.0,0.0,45.0,50.0},
+            {100.0,90.0,50.0,45.0,0.0,50.0},
+            {135.0,135.0,90.0,50.0,50.0,0.0}};
 
     public static void main(String[] args){
         Modelo modelo = new Modelo();
-        Experiment experiment = new Experiment("Experiment",TimeUnit.SECONDS,TimeUnit.MINUTES,null);
+        Experiment experiment = new Experiment("Experiment",TimeUnit.MINUTES,TimeUnit.MINUTES,null);
         modelo.connectToExperiment(experiment);
         experiment.setShowProgressBar(true);
         experiment.stop(new TimeInstant(2900, TimeUnit.HOURS));
@@ -60,12 +63,12 @@ public class Modelo extends Model {
 
         agvqueue = new ProcessQueue<AGV>(this,"Agv Queue",true,true);
 
-        estacao = new ProcessQueue[5];
-        estacao[A] = new ProcessQueue<Job>(this,"Estação A Queue",QueueBased.FIFO,3,true,true);
-        estacao[B] = new ProcessQueue<Job>(this,"Estação B Queue",QueueBased.FIFO,3,true,true);
-        estacao[C] = new ProcessQueue<Job>(this,"Estação C Queue",QueueBased.FIFO,4,true,true);
-        estacao[D] = new ProcessQueue<Job>(this,"Estação D Queue",QueueBased.FIFO,4,true,true);
-        estacao[E] = new ProcessQueue<Job>(this,"Estação E Queue",QueueBased.FIFO,1,true,true);
+        estacao = new Station[5];
+        estacao[A] = new Station(this,"Estação A Queue",3);
+        estacao[B] = new Station(this,"Estação B Queue",3);
+        estacao[C] = new Station(this,"Estação C Queue",4);
+        estacao[D] = new Station(this,"Estação D Queue",4);
+        estacao[E] = new Station(this,"Estação E Queue",1);
 
         distErlangs1 = new ContDistErlang[4];
         distErlangs1[0] = new ContDistErlang(getModel(),"1º Erlang Job 1", 2,30.0,true,true);
@@ -86,10 +89,17 @@ public class Modelo extends Model {
         distErlangs3[4] = new ContDistErlang(getModel(),"5º Erlang Job 3",2,60.0,true,true);
 
         jobqueue = new ProcessQueue<Job>(this,"Job Queue",true,true);
+
+        totaldelayinqueue = new Tally[3];
+        totaldelayinqueue[0] = new Tally(this,"Job 1 tally",true,true);
+        totaldelayinqueue[1] = new Tally(this,"Job 2 tally",true,true);
+        totaldelayinqueue[2] = new Tally(this,"Job 3 tally",true,true);
+
     }
 
 
-    public double getJobArrivalTime(){ return jobArrivalTime.sample();}
+    public double getJobArrivalTime(){
+        return jobArrivalTime.sample();}
 
     @Override
     public String description() {

@@ -33,16 +33,37 @@ public class AGV extends SimProcess {
                 modelo.jobqueue.remove(job);
                 double distance = Modelo.distances[currentposition][job.getCurrentPosition()];
                 double time = distance/ speed;
-                sendTraceNote(time + "MOVING FROM " + currentposition+" TO " + job.getCurrentPosition());
+                sendTraceNote("Going from " + currentposition + "to " + job.getCurrentPosition());
                 hold(new TimeSpan(time, TimeUnit.SECONDS)); //Mover-se para a posição do job
                 currentposition = job.getCurrentPosition();
-                if(job.getNextPosition()!=-1){
-                    distance = Modelo.distances[currentposition][job.getCurrentPosition()];
-                    time = distance/speed;
-                    sendTraceNote(time +" TAKING " + job + " from " + currentposition +" to "+job.getCurrentPosition());
-                    hold(new TimeSpan(time,TimeUnit.SECONDS)); //Levar Job para a proxima posição
+                if(job.getCurrentPosition()!=Modelo.STATION){
+                    modelo.estacao[job.getCurrentPosition()].desoccupy(job);
+                    if(!modelo.estacao[job.getCurrentPosition()].iswaitlineempty()) {
+                        Job job1 = modelo.estacao[job.getCurrentPosition()].getFirstJobWaiting();
+                        sendTraceNote("Chegou a queue a " + presentTime()+ " e saiu a " + job1.arrivalinqueue + "Demorou " + (presentTime().getTimeAsDouble()-job1.arrivalinqueue));
+                        job1.totaldelayinqueue.update(presentTime().getTimeAsDouble() - job1.arrivalinqueue);
+                        if(modelo.estacao[job.getCurrentPosition()].occupy(job1)){
+                            job1.activate();
+                        }
+                    }
                 }
-                job.activate();
+                sendTraceNote(time + " TAKING " + job + " from " + currentposition + " to " + job.getNextPosition());
+                job.move();
+                distance = Modelo.distances[currentposition][job.getCurrentPosition()];
+                time = distance/speed;
+                currentposition = job.getCurrentPosition();
+                hold(new TimeSpan(time,TimeUnit.SECONDS)); //Levar Job para a proxima posição
+                if(job.getCurrentPosition()!=Modelo.STATION) {
+                    if (modelo.estacao[currentposition].occupy(job)) {
+                        job.activate();
+                    } else {
+                        modelo.estacao[currentposition].wait(job);
+                        job.arrivalinqueue = presentTime().getTimeAsDouble();
+                    }
+                }
+                else{
+                    job.activate();
+                }
             }
         }
     }

@@ -36,8 +36,10 @@ public class JobGenerator extends SimProcess{
                     agv.activate();
                     modelo.agvqueue.remove(agv);
                 }
-                TimeSpan time = new TimeSpan(modelo.getJobArrivalTime(), TimeUnit.MINUTES);
-                sendTraceNote(time.toString());
+                double test = modelo.getJobArrivalTime();
+                System.out.println(test);
+                TimeSpan time = new TimeSpan(test, TimeUnit.MINUTES);
+                System.out.println(time);
                 hold(time);
             }
     }

@@ -7,7 +7,8 @@ import desmoj.core.simulator.Model;
 public class Job2 extends Job {
     public Job2(Model owner, String name, boolean showInTrace) {
         super(owner, name, showInTrace);
-        positions = new int[]{Modelo.STATION,Modelo.D, Modelo.A,Modelo.C};
+        positions = new int[]{Modelo.STATION,Modelo.D, Modelo.A,Modelo.C,Modelo.STATION};
         distErlangs = Modelo.distErlangs2;
+        totaldelayinqueue = Modelo.totaldelayinqueue[1];
     }
 }
