@@ -14,13 +14,13 @@ public class Modelo extends Model {
     public static int E = 4;
     public static int STATION = 5;
 
+    public static boolean returnstobase = false;
+
     public static Tally[] totaldelayinqueue;
 
     public static ContDistErlang[] distErlangs1;
     public static ContDistErlang[] distErlangs2;
     public static ContDistErlang[] distErlangs3;
-
-
 
 
     protected ProcessQueue<Job> jobqueue;
@@ -40,7 +40,7 @@ public class Modelo extends Model {
 
     public static void main(String[] args){
         Modelo modelo = new Modelo();
-        Experiment experiment = new Experiment("Experiment",TimeUnit.MINUTES,TimeUnit.MINUTES,null);
+        Experiment experiment = new Experiment("Experiment",TimeUnit.SECONDS,TimeUnit.MINUTES,null);
         modelo.connectToExperiment(experiment);
         experiment.setShowProgressBar(true);
         experiment.stop(new TimeInstant(2900, TimeUnit.HOURS));

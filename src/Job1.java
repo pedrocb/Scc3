@@ -1,4 +1,3 @@
-import com.sun.javafx.sg.prism.NGShape;
 import desmoj.core.dist.ContDistErlang;
 import desmoj.core.simulator.Model;
 

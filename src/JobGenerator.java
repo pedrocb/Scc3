@@ -1,4 +1,3 @@
-import com.sun.javafx.sg.prism.NGShape;
 import desmoj.core.simulator.Model;
 import desmoj.core.simulator.SimProcess;
 import desmoj.core.simulator.TimeSpan;

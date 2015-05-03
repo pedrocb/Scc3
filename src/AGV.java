@@ -1,4 +1,3 @@
-import com.sun.javafx.sg.prism.NGShape;
 import desmoj.core.simulator.Model;
 import desmoj.core.simulator.SimProcess;
 import desmoj.core.simulator.TimeSpan;
@@ -25,6 +24,12 @@ public class AGV extends SimProcess {
     public void lifeCycle() {
         while(true){
             if(modelo.jobqueue.isEmpty()){
+                if(Modelo.returnstobase){
+                    double distance = Modelo.distances[currentposition][Modelo.STATION];
+                    double time = distance/speed;
+                    sendTraceNote("MOVing to station");
+                    hold(new TimeSpan(time, TimeUnit.SECONDS));
+                }
                 modelo.agvqueue.insert(this);
                 passivate();
             }
@@ -38,19 +43,21 @@ public class AGV extends SimProcess {
                 currentposition = job.getCurrentPosition();
                 if(job.getCurrentPosition()!=Modelo.STATION){
                     modelo.estacao[job.getCurrentPosition()].desoccupy(job);
+                    modelo.estacao[job.getCurrentPosition()].blockedtime+= presentTime().getTimeAsDouble() - modelo.estacao[job.getCurrentPosition()].startedblocking;
                     if(!modelo.estacao[job.getCurrentPosition()].iswaitlineempty()) {
                         Job job1 = modelo.estacao[job.getCurrentPosition()].getFirstJobWaiting();
                         sendTraceNote("Chegou a queue a " + presentTime()+ " e saiu a " + job1.arrivalinqueue + "Demorou " + (presentTime().getTimeAsDouble()-job1.arrivalinqueue));
-                        job1.totaldelayinqueue.update(presentTime().getTimeAsDouble() - job1.arrivalinqueue);
+                        job1.timeinqueue+=presentTime().getTimeAsDouble() - job1.arrivalinqueue;
                         if(modelo.estacao[job.getCurrentPosition()].occupy(job1)){
                             job1.activate();
                         }
                     }
                 }
-                sendTraceNote(time + " TAKING " + job + " from " + currentposition + " to " + job.getNextPosition());
+                sendTraceNote(" TAKING " + job + " from " + currentposition + " to " + job.getNextPosition());
                 job.move();
                 distance = Modelo.distances[currentposition][job.getCurrentPosition()];
                 time = distance/speed;
+                sendTraceNote(""+time);
                 currentposition = job.getCurrentPosition();
                 hold(new TimeSpan(time,TimeUnit.SECONDS)); //Levar Job para a proxima posição
                 if(job.getCurrentPosition()!=Modelo.STATION) {
