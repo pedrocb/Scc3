@@ -14,9 +14,10 @@ public class Modelo extends Model {
     public static int E = 4;
     public static int STATION = 5;
 
-    public static boolean returnstobase = false;
+    public static boolean returnstobase = true;
 
     public static Tally[] totaldelayinqueue;
+    public static Tally[] totaltimeinagv;
 
     public static ContDistErlang[] distErlangs1;
     public static ContDistErlang[] distErlangs2;
@@ -91,9 +92,16 @@ public class Modelo extends Model {
         jobqueue = new ProcessQueue<Job>(this,"Job Queue",true,true);
 
         totaldelayinqueue = new Tally[3];
-        totaldelayinqueue[0] = new Tally(this,"Job 1 tally",true,true);
-        totaldelayinqueue[1] = new Tally(this,"Job 2 tally",true,true);
-        totaldelayinqueue[2] = new Tally(this,"Job 3 tally",true,true);
+        totaldelayinqueue[0] = new Tally(this,"Job 1 queue tally",true,true);
+        totaldelayinqueue[1] = new Tally(this,"Job 2 queue tally",true,true);
+        totaldelayinqueue[2] = new Tally(this,"Job 3 queue tally",true,true);
+
+        totaltimeinagv = new Tally[3];
+        totaltimeinagv[0] = new Tally(this,"Job 1 avg tally",true,true);
+        totaltimeinagv[1] = new Tally(this,"Job 2 avg tally",true,true);
+        totaltimeinagv[2] = new Tally(this,"Job 3 avg tally",true,true);
+
+
 
     }
 

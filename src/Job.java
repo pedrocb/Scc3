@@ -17,6 +17,8 @@ public abstract class Job extends SimProcess {
     public double arrivalinqueue;
     public Tally totaldelayinqueue;
     public double timeinqueue = 0;
+    public Tally timeinagv;
+    public double totaltimeinagv;
     public Job(Model owner, String name, boolean showInTrace) {
         super(owner, name, showInTrace);
     }
@@ -42,6 +44,8 @@ public abstract class Job extends SimProcess {
             }
         }
         totaldelayinqueue.update(timeinqueue);
+        timeinagv.update(totaltimeinagv);
+
     }
 
     public double getServiceTime(){

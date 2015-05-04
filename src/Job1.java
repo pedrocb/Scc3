@@ -11,7 +11,7 @@ public class Job1 extends Job {
         positions = new int[]{Modelo.STATION,Modelo.C, Modelo.A, Modelo.B, Modelo.E,Modelo.STATION};
         distErlangs = Modelo.distErlangs1;
         totaldelayinqueue = Modelo.totaldelayinqueue[0];
-
+        timeinagv = Modelo.totaltimeinagv[0];
     }
 
 }

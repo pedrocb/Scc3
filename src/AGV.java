@@ -57,6 +57,7 @@ public class AGV extends SimProcess {
                 job.move();
                 distance = Modelo.distances[currentposition][job.getCurrentPosition()];
                 time = distance/speed;
+                job.totaltimeinagv+=time;
                 sendTraceNote(""+time);
                 currentposition = job.getCurrentPosition();
                 hold(new TimeSpan(time,TimeUnit.SECONDS)); //Levar Job para a proxima posição
