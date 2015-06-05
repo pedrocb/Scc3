@@ -14,7 +14,7 @@ public class Modelo extends Model {
     public static int E = 4;
     public static int STATION = 5;
 
-    public static boolean returnstobase = true;
+    public static boolean returnstobase = false;
 
     public static Tally[] totaldelayinqueue;
     public static Tally[] totaltimeinagv;
@@ -65,7 +65,7 @@ public class Modelo extends Model {
         agvqueue = new ProcessQueue<AGV>(this,"Agv Queue",true,true);
 
         estacao = new Station[5];
-        estacao[A] = new Station(this,"Estação A Queue",3);
+        estacao[A] = new Station(this,"Estação A Queue",5);
         estacao[B] = new Station(this,"Estação B Queue",3);
         estacao[C] = new Station(this,"Estação C Queue",4);
         estacao[D] = new Station(this,"Estação D Queue",4);
